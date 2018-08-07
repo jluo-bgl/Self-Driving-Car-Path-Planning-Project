@@ -163,6 +163,86 @@ vector<double> getXY(double s, double d, const vector<double> &maps_s, const vec
 
 }
 
+void testAllBeenSetupAndCarShouldGoStraight(double car_x, double car_y, double car_yaw, vector<double> &next_x_vals, vector<double> &next_y_vals) {
+	double dist_inc = 0.5;
+	for(int i = 0; i < 50; i++)
+	{
+		next_x_vals.push_back(car_x+(dist_inc*i)*cos(deg2rad(car_yaw)));
+		next_y_vals.push_back(car_y+(dist_inc*i)*sin(deg2rad(car_yaw)));
+	}
+}
+
+
+class CarStatus {
+ public:
+  double car_x;
+  double car_y;
+  double car_s;
+  double car_d;
+  double car_yaw;
+  double car_speed;
+
+  // Previous path data given to the Planner
+//  auto previous_path_x;
+//  auto previous_path_y;
+  // Previous path's end s and d values
+  double end_path_s;
+  double end_path_d;
+
+  // Sensor Fusion Data, a list of all other cars on the same side of the road.
+//  auto sensor_fusion;
+
+
+  CarStatus(double car_x, double car_y, double car_s, double car_d, double car_yaw, double car_speed,
+                double end_path_s, double end_path_d) {
+    this->car_x = car_x;
+    this->car_y = car_y;
+    this->car_s = car_s;
+    this->car_d = car_d;
+    this->car_yaw = car_yaw;
+    this->car_speed = car_speed;
+    this->end_path_s = end_path_s;
+    this->end_path_d = end_path_d;
+  }
+};
+
+
+class PathPlanningStrategy{
+ public:
+  vector<double> map_waypoints_x;
+  vector<double> map_waypoints_y;
+  vector<double> map_waypoints_s;
+  vector<double> map_waypoints_dx;
+  vector<double> map_waypoints_dy;
+
+  PathPlanningStrategy(vector<double> map_waypoints_x,
+  vector<double> map_waypoints_y,
+  vector<double> map_waypoints_s,
+  vector<double> map_waypoints_dx,
+  vector<double> map_waypoints_dy) {
+    this->map_waypoints_x = map_waypoints_x;
+    this->map_waypoints_y = map_waypoints_y;
+    this->map_waypoints_s = map_waypoints_s;
+    this->map_waypoints_dx = map_waypoints_dx;
+    this->map_waypoints_dy = map_waypoints_dy;
+  }
+
+
+  void followTheLine(CarStatus &drivingStatus, vector<double> &next_x_vals, vector<double> &next_y_vals) {
+    double dist_inc = 0.4;
+    for(int i = 0; i < 50; i++)
+    {
+      double next_s = drivingStatus.car_s + (i + 1) * dist_inc;
+      double next_d = 6;
+      vector<double> xy = getXY(next_s, next_d, this->map_waypoints_s, this->map_waypoints_x, this->map_waypoints_y);
+      next_x_vals.push_back(xy[0]);
+      next_y_vals.push_back(xy[1]);
+    }
+  }
+};
+
+
+
 int main() {
   uWS::Hub h;
 
@@ -200,7 +280,9 @@ int main() {
   	map_waypoints_dy.push_back(d_y);
   }
 
-  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  PathPlanningStrategy followLineStrategy = PathPlanningStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
+
+  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &followLineStrategy](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -237,11 +319,16 @@ int main() {
           	// Sensor Fusion Data, a list of all other cars on the same side of the road.
           	auto sensor_fusion = j[1]["sensor_fusion"];
 
+			CarStatus drivingStatus = CarStatus(car_x, car_y, car_s, car_d, car_yaw, car_speed, end_path_s, end_path_d);
+
           	json msgJson;
 
           	vector<double> next_x_vals;
           	vector<double> next_y_vals;
 
+            // Uncomment below, you car should go straight, otherwise your setup is not right
+			// testAllBeenSetupAndCarShouldGoStraight(car_x, car_y, car_yaw, next_x_vals, next_y_vals);
+            followLineStrategy.followTheLine(drivingStatus, next_x_vals, next_y_vals);
 
           	// TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
           	msgJson["next_x"] = next_x_vals;
