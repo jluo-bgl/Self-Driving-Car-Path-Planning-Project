@@ -227,6 +227,8 @@ class PathPlanningStrategy{
     this->map_waypoints_dy = map_waypoints_dy;
   }
 
+  virtual ~PathPlanningStrategy() {};
+
 
   void followTheLine(CarStatus &drivingStatus, vector<double> &next_x_vals, vector<double> &next_y_vals) {
     double dist_inc = 0.4;
@@ -239,8 +241,59 @@ class PathPlanningStrategy{
       next_y_vals.push_back(xy[1]);
     }
   }
+
+  void planningPath(CarStatus &drivingStatus, vector<double> &next_x_vals, vector<double> &next_y_vals) {
+    for(int i = 0; i < 50; i++)
+    {
+      double nextx;
+      double nexty;
+      std::tie(nextx, nexty) = nextXY(drivingStatus, i);
+      next_x_vals.push_back(nextx);
+      next_y_vals.push_back(nexty);
+    }
+  }
+
+ protected:
+  virtual std::tuple<double, double> nextXY(CarStatus &drivingStatus, int currentStep) = 0;
 };
 
+
+
+class PathPlanningFollowLineStrategy: public PathPlanningStrategy {
+ public:
+  PathPlanningFollowLineStrategy(vector<double> map_waypoints_x,
+  vector<double> map_waypoints_y, vector<double> map_waypoints_s,
+  vector<double> map_waypoints_dx, vector<double> map_waypoints_dy): PathPlanningStrategy(
+      map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy) {}
+
+ protected:
+  double dist_inc = 0.4;
+
+  std::tuple<double, double> nextXY(CarStatus &drivingStatus, int currentStep) {
+    double next_s = drivingStatus.car_s + (currentStep + 1) * dist_inc;
+    double next_d = 6;
+    vector<double> xy = getXY(next_s, next_d, this->map_waypoints_s, this->map_waypoints_x, this->map_waypoints_y);
+    return std::make_tuple(xy[0], xy[1]);
+  }
+};
+
+
+class PathPlanningGoStraightStrategy: public PathPlanningStrategy {
+ public:
+  PathPlanningGoStraightStrategy(vector<double> map_waypoints_x,
+                                 vector<double> map_waypoints_y, vector<double> map_waypoints_s,
+                                 vector<double> map_waypoints_dx, vector<double> map_waypoints_dy): PathPlanningStrategy(
+      map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy) {}
+
+ protected:
+  double dist_inc = 0.4;
+  std::tuple<double, double> nextXY(CarStatus &drivingStatus, int currentStep) {
+    return std::make_tuple(
+        drivingStatus.car_x+(dist_inc*currentStep)*cos(deg2rad(drivingStatus.car_yaw)),
+        drivingStatus.car_y+(dist_inc*currentStep)*sin(deg2rad(drivingStatus.car_yaw))
+    );
+  }
+};
 
 
 int main() {
@@ -280,7 +333,8 @@ int main() {
   	map_waypoints_dy.push_back(d_y);
   }
 
-  PathPlanningStrategy followLineStrategy = PathPlanningStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
+//  PathPlanningStrategy *followLineStrategy = new PathPlanningGoStraightStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
+  PathPlanningStrategy *followLineStrategy = new PathPlanningFollowLineStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
 
   h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &followLineStrategy](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
@@ -328,7 +382,7 @@ int main() {
 
             // Uncomment below, you car should go straight, otherwise your setup is not right
 			// testAllBeenSetupAndCarShouldGoStraight(car_x, car_y, car_yaw, next_x_vals, next_y_vals);
-            followLineStrategy.followTheLine(drivingStatus, next_x_vals, next_y_vals);
+            followLineStrategy->planningPath(drivingStatus, next_x_vals, next_y_vals);
 
           	// TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
           	msgJson["next_x"] = next_x_vals;
@@ -380,4 +434,6 @@ int main() {
     return -1;
   }
   h.run();
+
+  delete followLineStrategy;
 }
