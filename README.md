@@ -76,6 +76,60 @@ we just need to keep a constant d and constant delta s
 
 [Frenet Coordination](/doc/FrenetCoordinate2.png)
 
+### Solution for keep the car with in lane
+
+After we have Frenet Coordination, it's very straightforward to keep car with in a lane.
+we increase s and make d a constant. what's all 
+
+```c
+class PathPlanningFollowLineStrategy: public PathPlanningStrategy {
+ protected:
+  double dist_inc = 0.4;
+  Lane lane = Lane(0);
+
+  std::tuple<double, double> nextXY(DriveEnvironment &drivingStatus, int currentStep) {
+    double next_s = drivingStatus.car_s + (currentStep + 1) * dist_inc;
+    double next_d = this->lane.d;
+    vector<double> xy = getXY(next_s, next_d, this->map_waypoints_s, this->map_waypoints_x, this->map_waypoints_y);
+    return std::make_tuple(xy[0], xy[1]);
+  }
+};
+```
+
+
+## Smooth Driving Experience
+
+### Cubic Spline Interpolation
+
+[Cubic Spline Interpolation](https://en.wikipedia.org/wiki/Spline_interpolation) is a mathematical method commonly
+used to construct new points within the boundaries of a set of known points. These new
+points are function values of an interpolation function (referred to as spline), which
+itself consists of multiple cubic piecewise polynomials.
+
+for example, give below points
+```
+-1.5, -1.2
+-.2, 0
+1, 0.5
+5, 1
+10, 1.2
+15, 2
+20, 1
+```
+[Points](/doc/cubic_spline_interpolation_points.png)
+
+after Spline Interpolation, we could got below Equations
+[Equations](/doc/cubic_spline_interpolation_equations.png)
+
+Based on above equations, by given any x value we could find y, 
+for example, if x = 11, f(11) = 1.3714
+
+We use this [C++ Cubic Spline Interpolation Library](http://kluge.in-chemnitz.de/opensource/spline/) to find
+the equations.
+
+
+
+
 ## Here is the data provided from the Simulator to the C++ Program
 
 #### Main car's localization Data (No Noise)
