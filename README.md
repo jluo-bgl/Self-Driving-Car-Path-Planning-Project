@@ -3,10 +3,10 @@
 Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimise by Cost Function.
 
 ### Lane Change Simple Cases
-[lane_change_simple_cases.gif](./doc/lane_change_simple_cases.gif)
+![lane_change_simple_cases.gif](./doc/lane_change_simple_cases.gif)
 
 ### In Traffic Change With Safe Distance
-[lane_change_in_traffic.gif](./doc/lane_change_in_traffic.gif)
+![lane_change_in_traffic.gif](./doc/lane_change_in_traffic.gif)
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
@@ -79,9 +79,9 @@ find below line in main.cpp and uncomment it
 If we switch from Cartesian Coordinate System into Frenet, the question become simple, 
 we just need to keep a constant d and constant delta s
 
-[Frenet Coordination](/doc/FrenetCoordinate.png)
+![Frenet Coordination](/doc/FrenetCoordinate.png)
 
-[Frenet Coordination](/doc/FrenetCoordinate2.png)
+![Frenet Coordination](/doc/FrenetCoordinate2.png)
 
 ### Solution for keep the car with in lane
 
@@ -123,10 +123,10 @@ for example, give below points
 15, 2
 20, 1
 ```
-[Points](/doc/cubic_spline_interpolation_points.png)
+![Points](/doc/cubic_spline_interpolation_points.png)
 
 after Spline Interpolation, we could got below Equations
-[Equations](/doc/cubic_spline_interpolation_equations.png)
+![Equations](/doc/cubic_spline_interpolation_equations.png)
 
 Based on above equations, by given any x value we could find y, 
 for example, if x = 11, f(11) = 1.3714

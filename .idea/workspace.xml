@@ -16,7 +16,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b9e2c7f-9b49-4056-a07b-9111cb036faa" name="Default" comment="" />
+    <list default="true" id="0b9e2c7f-9b49-4056-a07b-9111cb036faa" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,8 +34,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="30">
-                <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <first_editor relative-caret-position="358">
+                <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -278,7 +280,7 @@
       <workItem from="1533706205569" duration="26374000" />
       <workItem from="1534124274858" duration="37249000" />
       <workItem from="1534463548945" duration="8992000" />
-      <workItem from="1534730369657" duration="11414000" />
+      <workItem from="1534730369657" duration="11636000" />
     </task>
     <servers />
   </component>
@@ -315,7 +317,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97589000" />
+    <option name="totallyTimeSpent" value="97811000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="371" y="-945" width="1440" height="877" extended-state="0" />
@@ -827,8 +829,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="30">
-            <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <first_editor relative-caret-position="358">
+            <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />
