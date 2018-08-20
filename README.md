@@ -1,5 +1,12 @@
-# CarND-Path-Planning-Project
-Self-Driving Car Engineer Nanodegree Program
+#Self Driving Car Path Planning Project
+=================================================
+Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimise by Cost Function.
+
+### Lane Change Simple Cases
+[lane_change_simple_cases.gif](./doc/lane_change_simple_cases.gif)
+
+### In Traffic Change With Safe Distance
+[lane_change_in_traffic.gif](./doc/lane_change_in_traffic.gif)
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
@@ -58,7 +65,7 @@ if you have clion, you should able to direct open this project and run in IDE
 
 ## Testing if you have everything setup correctly
 
-find below line and uncomment it
+find below line in main.cpp and uncomment it
 
 ```c
 // Uncomment below, you car should go straight, otherwise your setup is not right
@@ -99,7 +106,7 @@ class PathPlanningFollowLineStrategy: public PathPlanningStrategy {
 
 ## Smooth Driving Experience
 
-### Cubic Spline Interpolation
+### Avoid Speed Spike with Cubic Spline Interpolation
 
 [Cubic Spline Interpolation](https://en.wikipedia.org/wiki/Spline_interpolation) is a mathematical method commonly
 used to construct new points within the boundaries of a set of known points. These new
@@ -127,6 +134,48 @@ for example, if x = 11, f(11) = 1.3714
 We use this [C++ Cubic Spline Interpolation Library](http://kluge.in-chemnitz.de/opensource/spline/) to find
 the equations.
 
+## Switch to Right Lane when it's more Efficient
+
+### FSM (Finite State Machine)
+
+In this repo, I implemented a simple finite machine which manages state change between ```enum class CarState { KEEP_LANE, CHANGE_LEFT, CHANGE_RIGHT };```
+
+The high level activity describer as below:
+
+1) Start Car with state "KEEP_LANE"
+2) For every car events (for example refresh interval), we see if currently too close to front car.
+3) if too close, we find the best next State by given current driving environment, include sensor fusion data, ```CarState findTheBestState(DriveEnvironment& driveEnvironment)```
+4) One or more new State will return, based on those State(s), we calculate COST and pick up the State who got the lowest cost
+5) We apply this best State via ```fsm->applyState(CarState state)```
+6) Change current lane to intended lane, for example, if best State is "CHANGE_LEFT", the intended lane will be current lane - 1
+7) We monitor what's the car actual lane and compare against intended lane, if they equal to each other, we know car finished the lane change, we switch current lane to intended lane and switch current state to "KEEP_LANE" so that get ready for next lane change. ```fsm->updateState(drivingStatus)```
+8) Back to step 1
+
+See [path_plan_strategy_with_fsm_cost_function.h](./src/path_plan_strategy_with_fsm_cost_function.h)
+```c
+  void planningPath(DriveEnvironment &drivingStatus, vector<double> &next_x_vals, vector<double> &next_y_vals) {
+    bool too_close = drivingStatus.tooCloseToFrontCar(lane);
+
+    if(too_close) {
+      ref_velocity -= 0.224;
+
+      CarState state = this->fsm->findTheBestState(drivingStatus);
+      this->fsm->applyState(state);
+      this->lane = this->fsm->getIntendedLane(state);
+
+    }else if (ref_velocity < 49.5) {
+      ref_velocity += 0.244;
+    }
+
+    this->fsm->updateState(drivingStatus);
+
+    this->generateTrajectory(this->lane, ref_velocity, drivingStatus, next_x_vals, next_y_vals);
+  }
+```
+
+### Cost Functions
+
+All cost functions are defined in class ```CostCalculator```
 
 
 

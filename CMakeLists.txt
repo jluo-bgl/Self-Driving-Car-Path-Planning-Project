@@ -7,8 +7,13 @@ add_definitions(-std=c++11)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
-set(sources src/main.cpp src/path_plan_strategy.h)
+include_directories(src/)
 
+set(sources src/config.h src/path_plan_strategy.h src/path_plan_strategy_with_fsm_cost_function.h)
+
+add_subdirectory(gtests)
+find_package(Threads REQUIRED)
+enable_testing()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
@@ -21,12 +26,24 @@ link_directories(/usr/local/Cellar/libuv/1.11.0/lib)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
 
-add_executable(path_planning ${sources})
-
-#file(GLOB TEST_SOURCES "tests/*.cpp")
-#add_executable(runAllTests tests.cpp ${TEST_SOURCES} ${SOURCES})
-#add_test(AllTests runAllTests)
-
-
+add_executable(path_planning src/main.cpp ${sources})
 target_link_libraries(path_planning z ssl uv uWS)
+
+set(sources_manual_test_files
+        tests/test2D.cpp
+        tests/testCostFunctions.cpp
+        tests/cost.h
+        tests/cost.cpp
+        tests/road.h
+        tests/road.cpp
+        tests/vehicle.h
+        tests/vehicle.cpp
+        tests/testPathPlanner.cpp
+        tests/testLane.cpp)
+file(GLOB TEST_SOURCES "tests/*.cpp")
+add_executable(runAllTests tests.cpp ${sources} ${sources_manual_test_files})
+target_link_libraries(runAllTests gtest gtest_main)
+add_test(AllTests runAllTests)
+
+
 

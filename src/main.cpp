@@ -10,7 +10,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "spline.h"
-#include "path_plan_strategy.h"
+#include "path_plan_strategy_with_fsm_cost_function.h"
 
 using namespace std;
 
@@ -55,7 +55,14 @@ int main() {
   	map_waypoints_dy.push_back(d_y);
   }
 
-  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningChangeLaneWhenApprochingCar(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
+  float targetSpeed = 49.5; //49 m/h
+  int goalLane = 1;
+  float goalAloneS = 6945; //m
+  Lane a = Lane(1);
+  CarFSM fsm = CarFSM(CarState::KEEP_LANE, a, AvailableLanes(3), targetSpeed, goalLane, goalAloneS);
+  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningFSMAndCostFunction(
+      map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy, &fsm);
+//  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningChangeLaneWhenApprochingCar(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
 //  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningSlowDownWhenApprochingCar(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
 //  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningGoStraightStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
 //  PathPlanningStrategy *pathPlanningStrategy = new PathPlanningFollowLineStrategy(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy, Lane(1));

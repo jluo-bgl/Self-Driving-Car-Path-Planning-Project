@@ -10,6 +10,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "spline.h"
+#include "config.h"
 
 using namespace std;
 
@@ -166,15 +167,6 @@ vector<double> getXY(double s, double d, const vector<double> &maps_s, const vec
 
 }
 
-void testAllBeenSetupAndCarShouldGoStraight(double car_x, double car_y, double car_yaw, vector<double> &next_x_vals, vector<double> &next_y_vals) {
-  double dist_inc = 0.5;
-  for(int i = 0; i < 50; i++)
-  {
-    next_x_vals.push_back(car_x+(dist_inc*i)*cos(deg2rad(car_yaw)));
-    next_y_vals.push_back(car_y+(dist_inc*i)*sin(deg2rad(car_yaw)));
-  }
-}
-
 struct XY{
   double x;
   double y;
@@ -187,24 +179,6 @@ struct XY{
   XY(double x, double y) {
       this->x = x;
       this->y = y;
-  }
-};
-
-struct Lane {
-  int laneNumberFromMiddleOfRoad;
-  int d;
-
-  Lane(int laneNumberFromMiddleOfRoad) {
-      this->laneNumberFromMiddleOfRoad = laneNumberFromMiddleOfRoad;
-      this->d = 2 + 4 * laneNumberFromMiddleOfRoad;
-  }
-
-  bool inSameLane(int dOfOtherCar) {
-      if ((dOfOtherCar < (this->d + 2)) && (dOfOtherCar > (this->d - 2))) {
-          return true;
-      }else{
-          return false;
-      }
   }
 };
 
@@ -232,20 +206,24 @@ class DriveEnvironment {
 
   DriveEnvironment(double car_x, double car_y, double car_s, double car_d, double car_yaw, double car_speed,
                    double end_path_s, double end_path_d, json previous_path_x, json previous_path_y, json sensor_fusion) {
-      this->car_x = car_x;
-      this->car_y = car_y;
-      this->car_s = car_s;
-      this->car_d = car_d;
-      this->car_yaw = car_yaw;
-      this->car_speed = car_speed;
-      this->end_path_s = end_path_s;
-      this->end_path_d = end_path_d;
+    this->car_x = car_x;
+    this->car_y = car_y;
+    this->car_s = car_s;
+    this->car_d = car_d;
+    this->car_yaw = car_yaw;
+    this->car_speed = car_speed;
+    this->end_path_s = end_path_s;
+    this->end_path_d = end_path_d;
 
-      this->previous_path_x = previous_path_x;
-      this->previous_path_y = previous_path_y;
-      this->sensor_fusion = sensor_fusion;
+    this->previous_path_x = previous_path_x;
+    this->previous_path_y = previous_path_y;
+    this->sensor_fusion = sensor_fusion;
 
-      this->prev_size = previous_path_x.size();
+    this->prev_size = previous_path_x.size();
+
+    if (this->prev_size > 0) {
+      this->car_s = end_path_s; // changed the status!!!!
+    }
   }
 
   bool hasEnoughPreviewPath() {
@@ -296,6 +274,46 @@ class DriveEnvironment {
           }
       }
       return too_close;
+  }
+
+  float laneSpeed(Lane lane, float targetSpeed) {
+    for (int i = 0; i < this->sensor_fusion.size(); i++) {
+      //car is in my lane
+      float d = this->sensor_fusion[i][6];
+      if (lane.inSameLane(d)) {
+        double vx = this->sensor_fusion[i][3];
+        double vy = this->sensor_fusion[i][4];
+        double check_speed = sqrt(vx * vx + vy * vy);
+        double check_car_s = this->sensor_fusion[i][5];
+
+        check_car_s += ((double)this->prev_size * 0.02 * check_speed);
+        if ((check_car_s > this->car_s) && (check_car_s - this->car_s) < 60) {
+          return check_car_s;
+        }
+      }
+    }
+    return targetSpeed;
+  }
+
+  float isLaneFree(Lane lane) {
+    bool free = true;
+
+    for (int i = 0; i < this->sensor_fusion.size(); i++) {
+      //car is in my lane
+      float d = this->sensor_fusion[i][6];
+      if (lane.inSameLane(d)) {
+        double vx = this->sensor_fusion[i][3];
+        double vy = this->sensor_fusion[i][4];
+        double check_speed = sqrt(vx * vx + vy * vy);
+        double check_car_s = this->sensor_fusion[i][5];
+
+        check_car_s += ((double)this->prev_size * 0.02 * check_speed);
+        if (abs(check_car_s - this->car_s) < 30) {
+          return false;
+        }
+      }
+    }
+    return free;
   }
 
  protected:
