@@ -1,6 +1,6 @@
 # Self Driving Car Path Planning Project
 =================================================
-Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimise by Cost Function.
+Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimised by Cost Function.
 
 ### Lane Change Simple Cases
 ![lane_change_simple_cases.gif](./doc/lane_change_simple_cases.gif)
@@ -10,6 +10,8 @@ Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine a
 
 ### Lane Change Continuously 
 ![lane_change_continuously.gif](./doc/lane_change_continue.gif)
+
+[![See full videos for driving 8 miles](./doc/youtube_video_8_miles.png)](https://youtu.be/Cv-7udTWQaU)
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
@@ -180,7 +182,45 @@ See [path_plan_strategy_with_fsm_cost_function.h](./src/path_plan_strategy_with_
 
 All cost functions are defined in class ```CostCalculator```
 
+Two cost function has been implemented as below, total cost is sum weighted cost functions. we give cost "reach goal" higher weight.
+* The cost increases with both the distance of intended lane from the goal and the distance of the final lane from the goal. The cost of being out of the goal lane also becomes larger as vehicle approaches the goal.
+* Cost becomes higher for trajectories with intended lane and final lane that have traffic slower than target_speed.
 
+```c
+class CostCalculator {
+
+ public:
+  float cost(CostInfo costInfo) {
+    const float costReachGoal = WEIGHT_REACH_GOAL * this->goal_distance_cost(
+        costInfo.goalLane, costInfo.intendedLane, costInfo.finalLane, costInfo.distanceToGoal);
+    const float costInEfficiency = WEIGHT_EFFICIENCY * this->inefficiency_cost(
+        costInfo.targetSpeed, costInfo.intendedLaneSpeed, costInfo.finalLanceSpeed);
+
+    return costReachGoal + costInEfficiency;
+  }
+
+ protected:
+  const float WEIGHT_REACH_GOAL = 1000000;
+  const float WEIGHT_EFFICIENCY = 100000;
+}
+```
+
+
+```c
+  float goal_distance_cost(int goal_lane, int intended_lane, int final_lane, float distance_to_goal) {
+    int delta_d = 2.0*goal_lane - intended_lane - final_lane;
+    float cost = 1 - exp(-(abs(delta_d) / distance_to_goal));
+    return cost;
+  }
+
+  float inefficiency_cost(float target_speed, float speed_intended_lane, float speed_final_lane) {
+    /*
+      
+      */
+    float cost = (2.0*target_speed - speed_intended_lane - speed_final_lane)/target_speed;
+    return cost;
+  }
+```
 
 ## Here is the data provided from the Simulator to the C++ Program
 
