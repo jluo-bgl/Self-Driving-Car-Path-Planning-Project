@@ -1,4 +1,4 @@
-#Self Driving Car Path Planning Project
+# Self Driving Car Path Planning Project
 =================================================
 Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimise by Cost Function.
 
@@ -7,6 +7,9 @@ Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine a
 
 ### In Traffic Change With Safe Distance
 ![lane_change_in_traffic.gif](./doc/lane_change_in_traffic.gif)
+
+### Lane Change Continuously 
+![lane_change_continuously.gif](./doc/lane_change_continue.gif)
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
