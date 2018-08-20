@@ -2,15 +2,13 @@
 =================================================
 Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimised by Cost Function.
 
-### Lane Change Simple Cases
-![lane_change_simple_cases.gif](./doc/lane_change_simple_cases.gif)
+### Lane Changes 
+![lane_change_continuously.gif](./doc/lane_change_continue.gif)
 
 ### In Traffic Change With Safe Distance
 ![lane_change_in_traffic.gif](./doc/lane_change_in_traffic.gif)
 
-### Lane Change Continuously 
-![lane_change_continuously.gif](./doc/lane_change_continue.gif)
-
+## Full Youtube Video
 [![See full videos for driving 8 miles](./doc/youtube_video_8_miles.png)](https://youtu.be/Cv-7udTWQaU)
    
 ### Simulator.
