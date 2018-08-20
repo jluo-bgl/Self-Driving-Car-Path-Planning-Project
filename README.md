@@ -212,9 +212,6 @@ class CostCalculator {
   }
 
   float inefficiency_cost(float target_speed, float speed_intended_lane, float speed_final_lane) {
-    /*
-      
-      */
     float cost = (2.0*target_speed - speed_intended_lane - speed_final_lane)/target_speed;
     return cost;
   }
