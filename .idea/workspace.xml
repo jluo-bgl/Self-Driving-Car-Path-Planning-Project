@@ -16,28 +16,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b9e2c7f-9b49-4056-a07b-9111cb036faa" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/doc/lane_change_in_traffic.gif" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/doc/lane_change_simple_cases.gif" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/config.h" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/path_plan_strategy_with_fsm_cost_function.h" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/cost.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/cost.h" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/road.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/road.h" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/testCostFunctions.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/testLane.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/testPathPlanner.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/vehicle.cpp" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tests/vehicle.h" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change beforePath="$PROJECT_DIR$/src/path_plan_strategy.h" afterPath="$PROJECT_DIR$/src/path_plan_strategy.h" />
-      <change beforePath="$PROJECT_DIR$/tests/test2D.cpp" afterPath="$PROJECT_DIR$/tests/test2D.cpp" />
-    </list>
+    <list default="true" id="0b9e2c7f-9b49-4056-a07b-9111cb036faa" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -53,8 +32,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="135">
-                <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+              <first_editor relative-caret-position="30">
+                <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -137,8 +116,8 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="147" />
-    <option name="y" value="-956" />
+    <option name="x" value="371" />
+    <option name="y" value="-945" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -299,7 +278,7 @@
       <workItem from="1533706205569" duration="26374000" />
       <workItem from="1534124274858" duration="37249000" />
       <workItem from="1534463548945" duration="8992000" />
-      <workItem from="1534730369657" duration="11330000" />
+      <workItem from="1534730369657" duration="11414000" />
     </task>
     <servers />
   </component>
@@ -336,10 +315,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97505000" />
+    <option name="totallyTimeSpent" value="97589000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="147" y="-956" width="1440" height="877" extended-state="0" />
+    <frame x="371" y="-945" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18675123" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -848,8 +827,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="135">
-            <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <first_editor relative-caret-position="30">
+            <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />
