@@ -1,6 +1,4 @@
 # Self Driving Car Path Planning Project
-=================================================
-Navigate to goal with High Definition Map, Sensor Fusion, Finite State Machine and Optimised by Cost Function.
 
 ### Lane Changes 
 ![lane_change_continuously.gif](./doc/lane_change_continue.gif)
